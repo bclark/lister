@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import SignInForm from '@/components/auth/SignInForm';
 import SignUpForm from '@/components/auth/SignUpForm';
-import { Star, List, Share2, Users, Sparkles, Heart, Trophy, Zap } from 'lucide-react';
+import { Star, List, Share2, Users, Sparkles, Trophy } from 'lucide-react';
 
 export default function HomePage() {
   const { user, loading } = useAuth();

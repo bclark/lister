@@ -203,7 +203,7 @@ export default function ListBuilderPage() {
                 <span className="text-pink-700 font-medium">✨ Choose Your Adventure ✨</span>
               </div>
               <h2 className="text-4xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-                What's Your Passion?
+                What&apos;s Your Passion?
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Pick a category and start building your amazing top 10 list! 🚀

@@ -112,7 +112,7 @@ export default function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
           onClick={onSwitchToSignUp}
           className="group text-purple-600 hover:text-purple-700 text-sm font-medium transition-colors duration-200 hover:scale-105 inline-flex items-center gap-1"
         >
-          <span>Don't have an account?</span>
+          <span>Don&apos;t have an account?</span>
           <span className="font-semibold group-hover:underline">Sign up</span>
           <Sparkles className="h-3 w-3 text-pink-500 group-hover:animate-pulse" />
         </button>

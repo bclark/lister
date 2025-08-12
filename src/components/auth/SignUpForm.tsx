@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Sparkles, Mail, Lock, ArrowRight, Star, Rocket } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Star, Rocket } from 'lucide-react';
 
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
