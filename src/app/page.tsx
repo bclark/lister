@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import SignInForm from '@/components/auth/SignInForm';
@@ -12,6 +12,12 @@ export default function HomePage() {
   const router = useRouter();
   const [showSignUp, setShowSignUp] = useState(false);
 
+  useEffect(() => {
+    if (user && !loading) {
+      router.push('/list-builder');
+    }
+  }, [user, loading, router]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -21,7 +27,6 @@ export default function HomePage() {
   }
 
   if (user) {
-    router.push('/list-builder');
     return null;
   }
 
