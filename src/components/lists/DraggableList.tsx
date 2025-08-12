@@ -18,6 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { ListItem } from '@/types';
 import DraggableListItem from './DraggableListItem';
+import { Trophy, Sparkles, GripVertical } from 'lucide-react';
 
 interface DraggableListProps {
   items: ListItem[];
@@ -59,14 +60,21 @@ export default function DraggableList({
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="mb-4 flex justify-between items-center">
-        <h3 className="text-lg font-semibold">
-          Your Top {maxItems} Items ({items.length}/{maxItems})
-        </h3>
-        {items.length === maxItems && (
-          <span className="text-sm text-gray-500">
-            List is full. Adding a new item will remove the last one.
+      <div className="mb-8 text-center">
+        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-100 to-orange-100 px-6 py-3 rounded-full mb-4 border border-yellow-200">
+          <Trophy className="h-5 w-5 text-yellow-600" />
+          <span className="text-yellow-700 font-semibold">
+            Your Top {maxItems} Items ({items.length}/{maxItems})
           </span>
+        </div>
+        
+        {items.length === maxItems && (
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-teal-100 px-4 py-2 rounded-full border border-green-200">
+            <Sparkles className="h-4 w-4 text-green-600" />
+            <span className="text-green-700 text-sm font-medium">
+              List is full! Adding a new item will remove the last one.
+            </span>
+          </div>
         )}
       </div>
 
@@ -76,7 +84,7 @@ export default function DraggableList({
         onDragEnd={handleDragEnd}
       >
         <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {items.map((item, index) => (
               <DraggableListItem
                 key={item.id}
@@ -90,9 +98,12 @@ export default function DraggableList({
       </DndContext>
 
       {items.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
-          <p className="text-lg">Your list is empty</p>
-          <p className="text-sm">Add your first item to get started!</p>
+        <div className="text-center py-16">
+          <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <GripVertical className="h-12 w-12 text-purple-400" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-700 mb-2">Your list is empty</h3>
+          <p className="text-gray-500 text-lg">Add your first item to get started! ✨</p>
         </div>
       )}
     </div>
