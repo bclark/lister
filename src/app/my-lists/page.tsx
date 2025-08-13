@@ -238,18 +238,6 @@ export default function MyListsPage() {
                 </h1>
               </div>
             </div>
-            
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <span className="text-xs sm:text-sm text-gray-600 bg-white/80 px-3 sm:px-4 py-2 rounded-full border border-gray-200 w-full sm:w-auto text-center sm:text-left truncate">
-                {user.email}
-              </span>
-              <button
-                onClick={signOut}
-                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200 w-full sm:w-auto text-sm sm:text-base"
-              >
-                <span>Sign Out</span>
-              </button>
-            </div>
           </div>
         </div>
       </header>

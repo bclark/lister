@@ -261,8 +261,8 @@ export default function ListBuilderPage() {
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md shadow-lg border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:h-20 gap-4 sm:gap-0">
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-row justify-between items-center py-4 sm:h-20 gap-4">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
               {selectedCategory && (
                 <button
                   onClick={selectedSubGenre ? handleBackToSubGenres : handleBackToCategories}
@@ -287,19 +287,18 @@ export default function ListBuilderPage() {
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <span className="text-xs sm:text-sm text-gray-600 bg-white/80 px-3 sm:px-4 py-2 rounded-full border border-gray-200 w-full sm:w-auto text-center sm:text-left truncate">
-                {user.email}
-              </span>
-              <button
-                onClick={() => router.push('/my-lists')}
-                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200 w-full sm:w-auto text-sm sm:text-base"
-              >
-                <Trophy size={16} />
-                <span>My Lists</span>
-              </button>
-            </div>
+            <button
+              onClick={() => router.push('/my-lists')}
+              className="p-2 sm:p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200 flex-shrink-0"
+              title="My Lists"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </button>
           </div>
+          
+          {/* Remove the separate My Lists Button section below */}
         </div>
       </header>
 
