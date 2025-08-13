@@ -261,22 +261,22 @@ export default function ListBuilderPage() {
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md shadow-lg border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:h-20 gap-4 sm:gap-0">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               {selectedCategory && (
                 <button
                   onClick={selectedSubGenre ? handleBackToSubGenres : handleBackToCategories}
-                  className="p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105"
+                  className="p-2 sm:p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 flex-shrink-0"
                 >
-                  <ArrowLeft size={20} />
+                  <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                 </button>
               )}
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Star className="h-8 w-8 text-transparent bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text" />
-                  <Sparkles className="h-4 w-4 text-yellow-500 absolute -top-1 -right-1 animate-pulse" />
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="relative flex-shrink-0">
+                  <Star className="h-6 w-6 sm:h-8 sm:w-8 text-transparent bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text" />
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 absolute -top-1 -right-1 animate-pulse" />
                 </div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">
                   {selectedSubGenre 
                     ? `${selectedSubGenre.display_name} ${selectedCategory?.display_name} List Builder`
                     : selectedCategory 
@@ -287,23 +287,16 @@ export default function ListBuilderPage() {
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 bg-white/80 px-4 py-2 rounded-full border border-gray-200">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <span className="text-xs sm:text-sm text-gray-600 bg-white/80 px-3 sm:px-4 py-2 rounded-full border border-gray-200 w-full sm:w-auto text-center sm:text-left truncate">
                 {user.email}
               </span>
               <button
                 onClick={() => router.push('/my-lists')}
-                className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200 w-full sm:w-auto text-sm sm:text-base"
               >
                 <Trophy size={16} />
-                My Lists
-              </button>
-              <button
-                onClick={signOut}
-                className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
-              >
-                <LogOut size={16} />
-                Sign Out
+                <span>My Lists</span>
               </button>
             </div>
           </div>
@@ -311,18 +304,18 @@ export default function ListBuilderPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {!selectedCategory ? (
           <div className="animate-slide-in-up">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 px-6 py-3 rounded-full mb-6 border border-pink-200">
-                <Sparkles className="h-5 w-5 text-pink-600" />
-                <span className="text-pink-700 font-medium">✨ Choose Your Adventure ✨</span>
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-pink-200">
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-pink-600" />
+                <span className="text-pink-700 font-medium text-sm sm:text-base">✨ Choose Your Adventure ✨</span>
               </div>
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-3 sm:mb-4">
                 What&apos;s Your Passion?
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
                 Pick a category and start building your amazing top 10 list! 🚀
               </p>
             </div>
@@ -333,21 +326,21 @@ export default function ListBuilderPage() {
           </div>
         ) : !selectedSubGenre ? (
           <div className="animate-slide-in-up">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 px-6 py-3 rounded-full mb-6 border border-blue-200">
-                <Sparkles className="h-5 w-5 text-blue-600" />
-                <span className="text-blue-700 font-medium">🎯 Pick Your Sub-Genre 🎯</span>
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-blue-200">
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                <span className="text-blue-700 font-medium text-sm sm:text-base">🎯 Pick Your Sub-Genre 🎯</span>
               </div>
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
                 {selectedCategory.display_name} Sub-Genres
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
                 Choose a specific sub-genre or go with the general category! 🚀
               </p>
             </div>
             
             {/* Sub-Genre Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 sm:mb-8">
               {/* General Category Option */}
               <button
                 onClick={() => handleSubGenreSelect({
@@ -356,16 +349,16 @@ export default function ListBuilderPage() {
                   display_name: `All ${selectedCategory.display_name}s`,
                   icon: selectedCategory.icon || '🎯'
                 })}
-                className="group p-6 rounded-2xl border-2 border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                className="group p-4 sm:p-6 rounded-2xl border-2 border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 hover:scale-105"
               >
                 <div className="text-center">
-                  <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">
                     {selectedCategory.icon || '🎯'}
                   </div>
-                  <h3 className="font-semibold text-lg mb-2 text-purple-700">
+                  <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2 text-purple-700">
                     All {selectedCategory.display_name}s
                   </h3>
-                  <p className="text-sm text-purple-600">
+                  <p className="text-xs sm:text-sm text-purple-600">
                     General category
                   </p>
                 </div>
@@ -376,13 +369,13 @@ export default function ListBuilderPage() {
                 <button
                   key={subGenre.id}
                   onClick={() => handleSubGenreSelect(subGenre)}
-                  className="group p-6 rounded-2xl border-2 border-gray-200 bg-white hover:border-purple-300 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                  className="group p-4 sm:p-6 rounded-2xl border-2 border-gray-200 bg-white hover:border-purple-300 hover:shadow-lg transition-all duration-300 hover:scale-105"
                 >
                   <div className="text-center">
-                    <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">
                       {subGenre.icon}
                     </div>
-                    <h3 className="font-semibold text-lg mb-2 text-gray-800">
+                    <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2 text-gray-800">
                       {subGenre.display_name}
                     </h3>
                   </div>
@@ -391,23 +384,23 @@ export default function ListBuilderPage() {
             </div>
           </div>
         ) : (
-          <div className="space-y-12 animate-slide-in-up">
+          <div className="space-y-8 sm:space-y-12 animate-slide-in-up">
             {/* List Header */}
             <div className="text-center">
-              <div className="bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-8 border border-white/50 shadow-xl">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-orange-100 px-6 py-3 rounded-full mb-6 border border-yellow-200">
-                  <Trophy className="h-5 w-5 text-yellow-600" />
-                  <span className="text-yellow-700 font-medium">🏆 Your Top 10 List 🏆</span>
+              <div className="bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-white/50 shadow-xl">
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-orange-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-yellow-200">
+                  <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
+                  <span className="text-yellow-700 font-medium text-sm sm:text-base">🏆 Your Top 10 List 🏆</span>
                 </div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
                   {list?.title || `My Top ${selectedSubGenre.display_name} ${selectedCategory.display_name}s of ${year}`}
                 </h2>
-                <p className="text-lg text-gray-600">
+                <p className="text-base sm:text-lg text-gray-600">
                   Drag and drop to reorder your items. Maximum of 10 items allowed.
                 </p>
                 {list && list.items.length > 0 && (
-                  <div className="mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-teal-100 px-4 py-2 rounded-full">
-                    <span className="text-green-700 font-medium">
+                  <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-teal-100 px-3 sm:px-4 py-2 rounded-full">
+                    <span className="text-green-700 font-medium text-sm sm:text-base">
                       {list.items.length}/10 items added
                     </span>
                   </div>
@@ -416,7 +409,7 @@ export default function ListBuilderPage() {
             </div>
 
             {/* Add Item Form */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
+            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-xl border border-white/50">
               <AddItemForm
                 onAddItem={handleAddItem}
                 disabled={list?.items.length === 10}
@@ -425,7 +418,7 @@ export default function ListBuilderPage() {
 
             {/* Draggable List */}
             {list && (
-              <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
+              <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-xl border border-white/50">
                 <DraggableList
                   items={list.items}
                   onReorder={handleReorder}
@@ -437,8 +430,8 @@ export default function ListBuilderPage() {
 
             {/* Share Buttons */}
             {list && list.items.length > 0 && (
-              <div className="text-center bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-8 border border-white/50 shadow-xl">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">Share Your Amazing List! 🎉</h3>
+              <div className="text-center bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-white/50 shadow-xl">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Share Your Amazing List! 🎉</h3>
                 <ShareButtons
                   list={list}
                   category={selectedCategory}
