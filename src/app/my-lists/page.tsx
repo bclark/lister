@@ -187,6 +187,24 @@ export default function MyListsPage() {
     return category?.display_name || 'Unknown';
   };
 
+  const getDisplayTitle = (title: string) => {
+    // Extract sub-genre name from titles like "My Top Action Movies of 2025"
+    if (title.includes('My Top ') && title.includes(' of ')) {
+      const subGenre = title.replace('My Top ', '').split(' ').slice(0, -3).join(' ');
+      return subGenre;
+    }
+    return title;
+  };
+
+  const getDisplayYear = (title: string, listYear: number) => {
+    // Extract year from title or use list year
+    if (title.includes(' of ')) {
+      const yearMatch = title.match(/of (\d{4})/);
+      return yearMatch ? yearMatch[1] : listYear;
+    }
+    return listYear;
+  };
+
   const handleCreateNewList = () => {
     router.push('/list-builder');
   };
@@ -324,11 +342,14 @@ export default function MyListsPage() {
                       {getCategoryIcon(list.category_id)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-bold text-base sm:text-lg text-gray-800 group-hover:text-purple-700 transition-colors duration-300 truncate">
-                        {list.title}
+                      <h3 className="font-bold text-base sm:text-lg text-gray-800 group-hover:text-purple-700 transition-colors duration-300">
+                        {getDisplayTitle(list.title)}
                       </h3>
-                      <p className="text-xs sm:text-sm text-gray-600 truncate">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         {getCategoryName(list.category_id)}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                        {getDisplayYear(list.title, list.year)}
                       </p>
                     </div>
                   </div>
