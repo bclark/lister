@@ -37,6 +37,7 @@ export interface List {
   id: string;
   user_id: string;
   category_id: string;
+  sub_genre_id?: string;
   year: number;
   title?: string;
   created_at: string;

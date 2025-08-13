@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { List, ListItem, Category, CreateListItemInput, SubGenre } from '@/types';
@@ -9,7 +9,7 @@ import CategorySelector from '@/components/categories/CategorySelector';
 import DraggableList from '@/components/lists/DraggableList';
 import AddItemForm from '@/components/lists/AddItemForm';
 import ShareButtons from '@/components/sharing/ShareButtons';
-import { LogOut, ArrowLeft, Sparkles, Trophy, Star } from 'lucide-react';
+import { ArrowLeft, Sparkles, Trophy, Star } from 'lucide-react';
 
 // Mock data - replace with actual API calls
 const mockCategories: Category[] = [
@@ -129,8 +129,8 @@ const mockCategories: Category[] = [
   },
 ];
 
-export default function ListBuilderPage() {
-  const { user, signOut } = useAuth();
+function ListBuilderContent() {
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -148,14 +148,9 @@ export default function ListBuilderPage() {
   useEffect(() => {
     const listId = searchParams.get('listId');
     if (listId && user) {
-      console.log('Loading list with ID:', listId); // Debug log
-      
       // Get all lists for the user and find the specific one
       const allLists = listStore.getLists(user.id);
-      console.log('All lists:', allLists); // Debug log
-      
       const existingList = allLists.find(list => list.id === listId);
-      console.log('Found list:', existingList); // Debug log
       
       if (existingList) {
         // Load the existing list
@@ -163,7 +158,6 @@ export default function ListBuilderPage() {
         
         // Find and set the category
         const category = mockCategories.find(cat => cat.id === existingList.category_id);
-        console.log('Found category:', category); // Debug log
         
         if (category) {
           setSelectedCategory(category);
@@ -188,11 +182,9 @@ export default function ListBuilderPage() {
             setSelectedSubGenre(defaultSubGenre);
           }
         }
-      } else {
-        console.log('List not found with ID:', listId); // Debug log
       }
     }
-  }, [user]); // Only depend on user, not searchParams
+  }, [user, searchParams]); // Include searchParams to satisfy dependency array
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
@@ -209,6 +201,7 @@ export default function ListBuilderPage() {
       id: listId,
       user_id: user?.id || '',
       category_id: selectedCategory?.id || '',
+      sub_genre_id: subGenre.id,
       year,
       title: `My Top ${subGenre.display_name} ${selectedCategory?.display_name}s of ${year}`,
       created_at: new Date().toISOString(),
@@ -493,5 +486,18 @@ export default function ListBuilderPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function ListBuilderPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </div>}>
+      <ListBuilderContent />
+    </Suspense>
   );
 }

@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { List, Category } from '@/types';
 import { listStore } from '@/lib/listStore';
-import { Star, Sparkles, Plus, Edit3, Trash2, Eye, Calendar, Trophy, ArrowLeft } from 'lucide-react';
+import { Star, Sparkles, Plus, Trash2, Calendar, Trophy, ArrowLeft } from 'lucide-react';
 
 // Mock data - replace with actual API calls
 const mockCategories: Category[] = [
@@ -126,7 +126,7 @@ const mockCategories: Category[] = [
 ];
 
 export default function MyListsPage() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [lists, setLists] = useState<List[]>([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -187,18 +187,18 @@ export default function MyListsPage() {
     return category?.display_name || 'Unknown';
   };
 
-  const getDisplayTitle = (title: string) => {
+  const getDisplayTitle = (title?: string) => {
     // Extract sub-genre name from titles like "My Top Action Movies of 2025"
-    if (title.includes('My Top ') && title.includes(' of ')) {
+    if (title && title.includes('My Top ') && title.includes(' of ')) {
       const subGenre = title.replace('My Top ', '').split(' ').slice(0, -3).join(' ');
       return subGenre;
     }
-    return title;
+    return title || 'Untitled List';
   };
 
-  const getDisplayYear = (title: string, listYear: number) => {
+  const getDisplayYear = (title?: string, listYear?: number) => {
     // Extract year from title or use list year
-    if (title.includes(' of ')) {
+    if (title && title.includes(' of ')) {
       const yearMatch = title.match(/of (\d{4})/);
       return yearMatch ? yearMatch[1] : listYear;
     }
@@ -207,11 +207,6 @@ export default function MyListsPage() {
 
   const handleCreateNewList = () => {
     router.push('/list-builder');
-  };
-
-  const handleViewList = (list: List) => {
-    // Navigate to list builder with this list pre-loaded
-    router.push(`/list-builder?listId=${list.id}`);
   };
 
   const handleEditList = (list: List) => {
