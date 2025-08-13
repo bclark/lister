@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import SignInForm from '@/components/auth/SignInForm';
 import SignUpForm from '@/components/auth/SignUpForm';
-import { Star, List, Share2, Users, Sparkles, Trophy, LogIn, UserPlus } from 'lucide-react';
+import { Star, List, Share2, Users, Sparkles, Trophy, LogIn, UserPlus, Plus } from 'lucide-react';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -69,20 +69,44 @@ export default function HomePage() {
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => handleAuthClick('signin')}
-                className="group flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
-              >
-                <LogIn size={18} className="group-hover:rotate-12 transition-transform duration-300" />
-                <span className="font-medium">Sign In</span>
-              </button>
-              <button
-                onClick={() => handleAuthClick('signup')}
-                className="group flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all duration-200 hover:scale-105 font-medium shadow-lg hover:shadow-xl"
-              >
-                <UserPlus size={18} className="group-hover:scale-110 transition-transform duration-300" />
-                <span>Sign Up</span>
-              </button>
+              {user ? (
+                // Signed in user - show My Lists and Sign Out
+                <>
+                  <button
+                    onClick={() => router.push('/my-lists')}
+                    className="group flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
+                  >
+                    <Trophy size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-medium">My Lists</span>
+                  </button>
+                  <button
+                    onClick={() => router.push('/list-builder')}
+                    className="group flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all duration-200 hover:scale-105 font-medium shadow-lg hover:shadow-xl"
+                  >
+                    <Plus size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                    <span>Create List</span>
+                  </button>
+                </>
+              ) : (
+                // Not signed in - show Sign In and Sign Up
+                <>
+                  <button
+                    onClick={() => handleAuthClick('signin')}
+                    className="group flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
+                  >
+                    <LogIn size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+                    <span className="font-medium">Sign In</span>
+                    <Sparkles className="h-4 w-4 text-pink-500 group-hover:animate-pulse" />
+                  </button>
+                  <button
+                    onClick={() => handleAuthClick('signup')}
+                    className="group flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all duration-200 hover:scale-105 font-medium shadow-lg hover:shadow-xl"
+                  >
+                    <UserPlus size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                    <span>Sign Up</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
