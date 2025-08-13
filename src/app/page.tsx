@@ -5,18 +5,28 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import SignInForm from '@/components/auth/SignInForm';
 import SignUpForm from '@/components/auth/SignUpForm';
-import { Star, List, Share2, Users, Sparkles, Trophy } from 'lucide-react';
+import { Star, List, Share2, Users, Sparkles, Trophy, LogIn, UserPlus } from 'lucide-react';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [showSignUp, setShowSignUp] = useState(false);
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   useEffect(() => {
     if (user && !loading) {
       router.push('/list-builder');
     }
   }, [user, loading, router]);
+
+  const handleAuthClick = (mode: 'signin' | 'signup') => {
+    setAuthMode(mode);
+    setShowAuthForm(true);
+  };
+
+  const closeAuthForm = () => {
+    setShowAuthForm(false);
+  };
 
   if (loading) {
     return (
@@ -56,9 +66,54 @@ export default function HomePage() {
                 Lister
               </h1>
             </div>
+
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => handleAuthClick('signin')}
+                className="group flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
+              >
+                <LogIn size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+                <span className="font-medium">Sign In</span>
+              </button>
+              <button
+                onClick={() => handleAuthClick('signup')}
+                className="group flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl hover:from-pink-600 hover:to-purple-600 transition-all duration-200 hover:scale-105 font-medium shadow-lg hover:shadow-xl"
+              >
+                <UserPlus size={18} className="group-hover:scale-110 transition-transform duration-300" />
+                <span>Sign Up</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
+
+      {/* Auth Form Modal */}
+      {showAuthForm && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/50 max-w-md w-full max-h-[90vh] overflow-y-auto animate-bounce-in">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                {authMode === 'signin' ? 'Welcome Back!' : 'Join the Adventure!'}
+              </h2>
+              <button
+                onClick={closeAuthForm}
+                className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {authMode === 'signin' ? (
+              <SignInForm onSwitchToSignUp={() => setAuthMode('signup')} />
+            ) : (
+              <SignUpForm onSwitchToSignIn={() => setAuthMode('signin')} />
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -78,7 +133,7 @@ export default function HomePage() {
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
             Create, organize, and share your favorite movies, songs, books, and more with our 
             <span className="font-semibold text-purple-600"> magical drag-and-drop interface</span>. 
             Turn your passions into beautiful, shareable lists! 🚀
@@ -149,14 +204,27 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Auth Forms */}
-        <div className="max-w-md mx-auto animate-slide-in-up" style={{animationDelay: '0.5s'}}>
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/50">
-            {showSignUp ? (
-              <SignUpForm onSwitchToSignIn={() => setShowSignUp(false)} />
-            ) : (
-              <SignInForm onSwitchToSignUp={() => setShowSignUp(true)} />
-            )}
+        {/* Call to Action */}
+        <div className="text-center animate-slide-in-up" style={{animationDelay: '0.5s'}}>
+          <div className="bg-gradient-to-r from-white/90 to-purple-50/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/50">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Ready to Get Started? 🚀</h3>
+            <p className="text-gray-600 mb-6">Join thousands of users creating amazing lists!</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => handleAuthClick('signup')}
+                className="group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-2xl hover:from-pink-600 hover:to-purple-600 transition-all duration-300 hover:scale-105 font-semibold shadow-lg hover:shadow-xl"
+              >
+                <UserPlus size={20} className="group-hover:scale-110 transition-transform duration-300" />
+                <span>Start Creating Lists</span>
+              </button>
+              <button
+                onClick={() => handleAuthClick('signin')}
+                className="group flex items-center justify-center gap-2 px-8 py-4 border-2 border-purple-200 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-2xl transition-all duration-300 hover:scale-105 font-semibold bg-white/80 backdrop-blur-sm"
+              >
+                <LogIn size={20} className="group-hover:rotate-12 transition-transform duration-300" />
+                <span>Sign In</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
