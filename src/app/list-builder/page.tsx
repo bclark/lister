@@ -304,7 +304,7 @@ export default function ListBuilderPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pt-8 sm:pt-16">
         {!selectedCategory ? (
           <div className="animate-slide-in-up">
             <div className="text-center mb-8 sm:mb-12">
