@@ -15,11 +15,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log('AuthContext: Starting authentication setup');
-    console.log('AuthContext: Using mock authentication mode');
+    
+    // Check for existing user in localStorage
+    const savedUser = localStorage.getItem('lister-user');
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        console.log('AuthContext: Found saved user:', userData);
+        setUser(userData);
+      } catch (error) {
+        console.error('AuthContext: Error parsing saved user:', error);
+        localStorage.removeItem('lister-user');
+      }
+    }
+    
     setLoading(false);
   }, []);
 
@@ -37,6 +50,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       aud: 'authenticated',
       role: 'authenticated',
     };
+    
+    // Save user to localStorage
+    localStorage.setItem('lister-user', JSON.stringify(mockUser));
     setUser(mockUser);
   };
 
@@ -54,12 +70,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       aud: 'authenticated',
       role: 'authenticated',
     };
+    
+    // Save user to localStorage
+    localStorage.setItem('lister-user', JSON.stringify(mockUser));
     setUser(mockUser);
   };
 
   const signOut = async () => {
     console.log('AuthContext: Sign out attempt');
     console.log('AuthContext: Using mock sign out');
+    
+    // Remove user from localStorage
+    localStorage.removeItem('lister-user');
     setUser(null);
   };
 

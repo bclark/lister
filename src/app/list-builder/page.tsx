@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { List, ListItem, Category, CreateListItemInput, SubGenre } from '@/types';
+import { listStore } from '@/lib/listStore';
 import CategorySelector from '@/components/categories/CategorySelector';
 import DraggableList from '@/components/lists/DraggableList';
 import AddItemForm from '@/components/lists/AddItemForm';
@@ -150,9 +151,11 @@ export default function ListBuilderPage() {
 
   const handleSubGenreSelect = (subGenre: SubGenre) => {
     setSelectedSubGenre(subGenre);
-    // Initialize or load existing list for this sub-genre and year
-    setList({
-      id: 'temp-list',
+    
+    // Create a new list or load existing one
+    const listId = `list-${Date.now()}`;
+    const newList: List = {
+      id: listId,
       user_id: user?.id || '',
       category_id: selectedCategory?.id || '',
       year,
@@ -160,7 +163,11 @@ export default function ListBuilderPage() {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       items: [],
-    });
+    };
+    
+    // Save the list to storage
+    listStore.saveList(newList);
+    setList(newList);
   };
 
   const handleAddItem = (itemData: Omit<CreateListItemInput, 'position'>) => {
@@ -188,20 +195,29 @@ export default function ListBuilderPage() {
       position: index + 1,
     }));
 
-    setList({
+    const updatedList = {
       ...list,
       items: updatedItems,
       updated_at: new Date().toISOString(),
-    });
+    };
+
+    // Save to storage
+    listStore.saveList(updatedList);
+    setList(updatedList);
   };
 
   const handleReorder = (items: ListItem[]) => {
     if (!list) return;
-    setList({
+    
+    const updatedList = {
       ...list,
       items,
       updated_at: new Date().toISOString(),
-    });
+    };
+    
+    // Save to storage
+    listStore.saveList(updatedList);
+    setList(updatedList);
   };
 
   const handleRemoveItem = (itemId: string) => {
@@ -214,11 +230,15 @@ export default function ListBuilderPage() {
         position: index + 1,
       }));
 
-    setList({
+    const updatedList = {
       ...list,
       items: newItems,
       updated_at: new Date().toISOString(),
-    });
+    };
+    
+    // Save to storage
+    listStore.saveList(updatedList);
+    setList(updatedList);
   };
 
   const handleBackToCategories = () => {
@@ -271,6 +291,13 @@ export default function ListBuilderPage() {
               <span className="text-sm text-gray-600 bg-white/80 px-4 py-2 rounded-full border border-gray-200">
                 {user.email}
               </span>
+              <button
+                onClick={() => router.push('/my-lists')}
+                className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
+              >
+                <Trophy size={16} />
+                My Lists
+              </button>
               <button
                 onClick={signOut}
                 className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
