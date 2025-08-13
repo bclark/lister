@@ -40,9 +40,34 @@ export default function CategorySelector({
                 {category.display_name}
               </h3>
               {category.description && (
-                <p className="text-sm text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300 mb-4">
                   {category.description}
                 </p>
+              )}
+              
+              {/* Sub-genres preview */}
+              {category.sub_genres && category.sub_genres.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm text-purple-600 font-medium mb-2">
+                    Popular sub-genres:
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {category.sub_genres.slice(0, 4).map((subGenre) => (
+                      <span
+                        key={subGenre.id}
+                        className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full border border-purple-200"
+                      >
+                        <span className="text-sm">{subGenre.icon}</span>
+                        <span>{subGenre.display_name}</span>
+                      </span>
+                    ))}
+                    {category.sub_genres.length > 4 && (
+                      <span className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full border border-gray-200">
+                        +{category.sub_genres.length - 4} more
+                      </span>
+                    )}
+                  </div>
+                </div>
               )}
               
               {/* Fun hover effect */}

@@ -6,12 +6,20 @@ export interface User {
   updated_at: string;
 }
 
+export interface SubGenre {
+  id: string;
+  name: string;
+  display_name: string;
+  icon: string;
+}
+
 export interface Category {
   id: string;
   name: string;
   display_name: string;
   description?: string;
   icon?: string;
+  sub_genres?: SubGenre[];
 }
 
 export interface ListItem {
