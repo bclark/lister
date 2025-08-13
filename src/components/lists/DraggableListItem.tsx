@@ -4,6 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ListItem } from '@/types';
 import { Trash2, GripVertical, Star, Crown } from 'lucide-react';
+import Image from 'next/image';
 
 interface DraggableListItemProps {
   item: ListItem;
@@ -83,9 +84,11 @@ export default function DraggableListItem({ item, position, onRemove }: Draggabl
           )}
           {item.image_url && (
             <div className="mt-3">
-              <img
+              <Image
                 src={item.image_url}
                 alt={item.title}
+                width={80}
+                height={80}
                 className="w-20 h-20 object-cover rounded-xl border-2 border-purple-200 group-hover:border-purple-300 transition-colors duration-300 shadow-md"
               />
             </div>

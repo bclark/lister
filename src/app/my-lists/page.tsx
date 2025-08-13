@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { List, Category } from '@/types';
 import { listStore } from '@/lib/listStore';
-import { Star, Sparkles, Plus, Edit3, Trash2, Eye, Calendar, Trophy, ArrowLeft } from 'lucide-react';
+import { Star, Sparkles, Plus, Trash2, Calendar, Trophy, ArrowLeft } from 'lucide-react';
 
 // Mock data - replace with actual API calls
 const mockCategories: Category[] = [
@@ -126,7 +126,7 @@ const mockCategories: Category[] = [
 ];
 
 export default function MyListsPage() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const [lists, setLists] = useState<List[]>([]);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -187,13 +187,26 @@ export default function MyListsPage() {
     return category?.display_name || 'Unknown';
   };
 
-  const handleCreateNewList = () => {
-    router.push('/list-builder');
+  const getDisplayTitle = (title?: string) => {
+    // Extract sub-genre name from titles like "My Top Action Movies of 2025"
+    if (title && title.includes('My Top ') && title.includes(' of ')) {
+      const subGenre = title.replace('My Top ', '').split(' ').slice(0, -3).join(' ');
+      return subGenre;
+    }
+    return title || 'Untitled List';
   };
 
-  const handleViewList = (list: List) => {
-    // Navigate to list builder with this list pre-loaded
-    router.push(`/list-builder?listId=${list.id}`);
+  const getDisplayYear = (title?: string, listYear?: number) => {
+    // Extract year from title or use list year
+    if (title && title.includes(' of ')) {
+      const yearMatch = title.match(/of (\d{4})/);
+      return yearMatch ? yearMatch[1] : listYear;
+    }
+    return listYear;
+  };
+
+  const handleCreateNewList = () => {
+    router.push('/list-builder');
   };
 
   const handleEditList = (list: List) => {
@@ -220,102 +233,92 @@ export default function MyListsPage() {
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md shadow-lg border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:h-20 gap-4 sm:gap-0">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 onClick={() => router.push('/list-builder')}
-                className="p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105"
+                className="p-2 sm:p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 flex-shrink-0"
               >
-                <ArrowLeft size={20} />
+                <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
               </button>
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Star className="h-8 w-8 text-transparent bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text" />
-                  <Sparkles className="h-4 w-4 text-yellow-500 absolute -top-1 -right-1 animate-pulse" />
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <div className="relative flex-shrink-0">
+                  <Star className="h-6 w-6 sm:h-8 sm:w-8 text-transparent bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text" />
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 absolute -top-1 -right-1 animate-pulse" />
                 </div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">
                   My Lists
                 </h1>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 bg-white/80 px-4 py-2 rounded-full border border-gray-200">
-                {user.email}
-              </span>
-              <button
-                onClick={signOut}
-                className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200"
-              >
-                <span>Sign Out</span>
-              </button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pt-8 sm:pt-16">
         {/* Header Section */}
-        <div className="text-center mb-12 animate-slide-in-up">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 rounded-full mb-6 border border-purple-200">
-            <Trophy className="h-5 w-5 text-purple-600" />
-            <span className="text-purple-700 font-medium">🏆 Your Collection of Lists 🏆</span>
+        <div className="text-center mb-8 sm:mb-12 animate-slide-in-up">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-pink-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-purple-200">
+            <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+            <span className="text-purple-700 font-medium text-sm sm:text-base">🏆 Your Collection of Lists 🏆</span>
           </div>
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent mb-3 sm:mb-4">
             My Top 10 Lists
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
             View, edit, and manage all your amazing curated lists! 🚀
           </p>
         </div>
 
         {/* Year Filter and Create Button */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <div className="flex items-center gap-4">
-            <label className="text-lg font-semibold text-gray-700">Filter by Year:</label>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="px-4 py-2 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
-            >
-              {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-            <button
-              onClick={refreshLists}
-              className="px-4 py-2 border-2 border-purple-200 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105"
-              title="Refresh lists"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </button>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+            <label className="text-base sm:text-lg font-semibold text-gray-700">Filter by Year:</label>
+            <div className="flex items-center gap-2 sm:gap-4">
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="px-3 sm:px-4 py-2 border-2 border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm text-sm sm:text-base"
+              >
+                {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+              <button
+                onClick={refreshLists}
+                className="p-2 sm:px-4 sm:py-2 border-2 border-purple-200 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105"
+                title="Refresh lists"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+            </div>
           </div>
           
           <button
             onClick={handleCreateNewList}
-            className="group flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-2xl hover:from-pink-600 hover:to-purple-600 transition-all duration-300 hover:scale-105 font-semibold shadow-lg hover:shadow-xl"
+            className="group flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-2xl hover:from-pink-600 hover:to-purple-600 transition-all duration-300 hover:scale-105 font-semibold shadow-lg hover:shadow-xl w-full sm:w-auto text-sm sm:text-base"
           >
-            <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+            <Plus size={18} className="sm:w-5 sm:h-5 group-hover:rotate-90 transition-transform duration-300" />
             <span>Create New List</span>
           </button>
         </div>
 
         {/* Lists Grid */}
         {filteredLists.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Trophy className="h-12 w-12 text-purple-400" />
+          <div className="text-center py-12 sm:py-16">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <Trophy className="h-10 w-10 sm:h-12 sm:w-12 text-purple-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-700 mb-2">No lists found for {selectedYear}</h3>
-            <p className="text-gray-500 text-lg mb-6">Start creating your first list to get started! ✨</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-700 mb-2">No lists found for {selectedYear}</h3>
+            <p className="text-gray-500 text-base sm:text-lg mb-4 sm:mb-6 px-4 sm:px-0">Start creating your first list to get started! ✨</p>
             <button
               onClick={handleCreateNewList}
-              className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 font-semibold shadow-lg hover:shadow-xl"
+              className="group flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 font-semibold shadow-lg hover:shadow-xl w-full sm:w-auto text-sm sm:text-base"
             >
-              <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+              <Plus size={18} className="sm:w-5 sm:h-5 group-hover:rotate-90 transition-transform duration-300" />
               <span>Create Your First List</span>
             </button>
           </div>
@@ -324,35 +327,39 @@ export default function MyListsPage() {
             {filteredLists.map((list, index) => (
               <div
                 key={list.id}
-                className="group bg-white/90 backdrop-blur-sm border-2 border-purple-200 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-slide-in-up"
+                onClick={() => handleEditList(list)}
+                className="group bg-white/90 backdrop-blur-sm border-2 border-purple-200 rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-slide-in-up cursor-pointer"
                 style={{animationDelay: `${index * 0.1}s`}}
               >
                 {/* List Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white text-2xl">
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white text-lg sm:text-2xl">
                       {getCategoryIcon(list.category_id)}
                     </div>
-                    <div>
-                      <h3 className="font-bold text-lg text-gray-800 group-hover:text-purple-700 transition-colors duration-300">
-                        {list.title}
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-bold text-base sm:text-lg text-gray-800 group-hover:text-purple-700 transition-colors duration-300">
+                        {getDisplayTitle(list.title)}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         {getCategoryName(list.category_id)}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                        {getDisplayYear(list.title, list.year)}
                       </p>
                     </div>
                   </div>
                 </div>
 
                 {/* List Stats */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                <div className="mb-3 sm:mb-4">
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600 mb-2">
                     <span className="flex items-center gap-1">
-                      <Calendar size={14} />
+                      <Calendar size={12} className="sm:w-3.5 sm:h-3.5" />
                       {list.year}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Trophy size={14} />
+                      <Trophy size={12} className="sm:w-3.5 sm:h-3.5" />
                       {list.items.length}/10 items
                     </span>
                   </div>
@@ -364,32 +371,22 @@ export default function MyListsPage() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2">
+                {/* Delete Button Only */}
+                <div className="flex justify-end">
                   <button
-                    onClick={() => handleViewList(list)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 hover:scale-105 font-medium"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click when clicking delete
+                      handleDeleteList(list.id);
+                    }}
+                    className="px-3 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 hover:scale-105"
+                    title="Delete List"
                   >
-                    <Eye size={16} />
-                    <span>View</span>
-                  </button>
-                  <button
-                    onClick={() => handleEditList(list)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 hover:scale-105 font-medium"
-                  >
-                    <Edit3 size={16} />
-                    <span>Edit</span>
-                  </button>
-                  <button
-                    onClick={() => handleDeleteList(list.id)}
-                    className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 hover:scale-105"
-                  >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} className="sm:w-4 sm:h-4" />
                   </button>
                 </div>
 
                 {/* Last Updated */}
-                <div className="mt-4 text-xs text-gray-500 text-center">
+                <div className="mt-3 sm:mt-4 text-xs text-gray-500 text-center">
                   Last updated: {new Date(list.updated_at).toLocaleDateString()}
                 </div>
               </div>
