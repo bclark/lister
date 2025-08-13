@@ -332,7 +332,8 @@ export default function MyListsPage() {
             {filteredLists.map((list, index) => (
               <div
                 key={list.id}
-                className="group bg-white/90 backdrop-blur-sm border-2 border-purple-200 rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-slide-in-up"
+                onClick={() => handleEditList(list)}
+                className="group bg-white/90 backdrop-blur-sm border-2 border-purple-200 rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-slide-in-up cursor-pointer"
                 style={{animationDelay: `${index * 0.1}s`}}
               >
                 {/* List Header */}
@@ -375,25 +376,15 @@ export default function MyListsPage() {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2">
+                {/* Delete Button Only */}
+                <div className="flex justify-end">
                   <button
-                    onClick={() => handleViewList(list)}
-                    className="flex-1 flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 hover:scale-105 font-medium text-xs sm:text-sm"
-                  >
-                    <Eye size={14} className="sm:w-4 sm:h-4" />
-                    <span>View</span>
-                  </button>
-                  <button
-                    onClick={() => handleEditList(list)}
-                    className="flex-1 flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-200 hover:scale-105 font-medium text-xs sm:text-sm"
-                  >
-                    <Edit3 size={14} className="sm:w-4 sm:h-4" />
-                    <span>Edit</span>
-                  </button>
-                  <button
-                    onClick={() => handleDeleteList(list.id)}
-                    className="px-2 sm:px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 hover:scale-105"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click when clicking delete
+                      handleDeleteList(list.id);
+                    }}
+                    className="px-3 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-200 hover:scale-105"
+                    title="Delete List"
                   >
                     <Trash2 size={14} className="sm:w-4 sm:h-4" />
                   </button>

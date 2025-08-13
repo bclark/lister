@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { List, ListItem, Category, CreateListItemInput, SubGenre } from '@/types';
 import { listStore } from '@/lib/listStore';
 import CategorySelector from '@/components/categories/CategorySelector';
@@ -132,6 +132,7 @@ const mockCategories: Category[] = [
 export default function ListBuilderPage() {
   const { user, signOut } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [selectedSubGenre, setSelectedSubGenre] = useState<SubGenre | null>(null);
   const [list, setList] = useState<List | null>(null);
@@ -142,6 +143,56 @@ export default function ListBuilderPage() {
       router.push('/');
     }
   }, [user, router]);
+
+  // Add effect to load existing list if listId is provided
+  useEffect(() => {
+    const listId = searchParams.get('listId');
+    if (listId && user) {
+      console.log('Loading list with ID:', listId); // Debug log
+      
+      // Get all lists for the user and find the specific one
+      const allLists = listStore.getLists(user.id);
+      console.log('All lists:', allLists); // Debug log
+      
+      const existingList = allLists.find(list => list.id === listId);
+      console.log('Found list:', existingList); // Debug log
+      
+      if (existingList) {
+        // Load the existing list
+        setList(existingList);
+        
+        // Find and set the category
+        const category = mockCategories.find(cat => cat.id === existingList.category_id);
+        console.log('Found category:', category); // Debug log
+        
+        if (category) {
+          setSelectedCategory(category);
+          
+          // Try to find the sub-genre if it exists
+          if (existingList.sub_genre_id) {
+            const subGenre = category.sub_genres?.find(sg => sg.id === existingList.sub_genre_id);
+            if (subGenre) {
+              setSelectedSubGenre(subGenre);
+            }
+          }
+          
+          // If no sub-genre, we need to set a default one or handle this case
+          if (!existingList.sub_genre_id) {
+            // Create a default sub-genre for the general category
+            const defaultSubGenre: SubGenre = {
+              id: `${category.id}-general`,
+              name: category.name,
+              display_name: `All ${category.display_name}s`,
+              icon: category.icon || '🎯'
+            };
+            setSelectedSubGenre(defaultSubGenre);
+          }
+        }
+      } else {
+        console.log('List not found with ID:', listId); // Debug log
+      }
+    }
+  }, [user]); // Only depend on user, not searchParams
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
