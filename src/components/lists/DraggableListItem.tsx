@@ -3,16 +3,19 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ListItem } from '@/types';
-import { Trash2, GripVertical, Star, Crown } from 'lucide-react';
-import Image from 'next/image';
+import { GripVertical, X, Crown, Star } from 'lucide-react';
 
 interface DraggableListItemProps {
   item: ListItem;
   position: number;
-  onRemove: () => void;
+  onRemove: (id: string) => void;
 }
 
-export default function DraggableListItem({ item, position, onRemove }: DraggableListItemProps) {
+export default function DraggableListItem({ 
+  item, 
+  position, 
+  onRemove 
+}: DraggableListItemProps) {
   const {
     attributes,
     listeners,
@@ -25,16 +28,9 @@ export default function DraggableListItem({ item, position, onRemove }: Draggabl
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
   };
 
-  // Different colors for top 3 positions
-  const getPositionColors = (pos: number) => {
-    if (pos === 1) return 'from-yellow-400 to-orange-500'; // Gold
-    if (pos === 2) return 'from-gray-300 to-gray-400'; // Silver
-    if (pos === 3) return 'from-amber-600 to-yellow-600'; // Bronze
-    return 'from-purple-400 to-pink-500'; // Default
-  };
+  // Position styles using CSS variables and inline styles
 
   const getPositionIcon = (pos: number) => {
     if (pos === 1) return <Crown className="h-4 w-4 text-white" />;
@@ -42,22 +38,32 @@ export default function DraggableListItem({ item, position, onRemove }: Draggabl
     return null;
   };
 
+  const getPositionStyle = (pos: number) => {
+    if (pos === 1) return { background: 'linear-gradient(to right, #fbbf24, #f97316)' }; // Gold
+    if (pos === 2) return { background: 'linear-gradient(to right, #d1d5db, #9ca3af)' }; // Silver
+    if (pos === 3) return { background: 'linear-gradient(to right, #d97706, #eab308)' }; // Bronze
+    return { background: 'var(--gradient-primary)' }; // Default
+  };
+
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={`group bg-white/90 backdrop-blur-sm border-2 border-purple-200 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] ${
+      className={`group backdrop-blur-sm border-2 rounded-none p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] ${
         isDragging ? 'shadow-2xl rotate-2 scale-105' : ''
       }`}
+      style={{backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-light)', ...style}}
     >
       <div className="flex items-center gap-5">
         {/* Position Badge */}
         <div className="flex-shrink-0 relative">
-          <div className={`w-12 h-12 bg-gradient-to-r ${getPositionColors(position)} text-white rounded-2xl flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+          <div 
+            className="w-12 h-12 text-white rounded-none flex items-center justify-center text-lg font-bold shadow-lg group-hover:scale-110 transition-transform duration-300"
+            style={getPositionStyle(position)}
+          >
             {getPositionIcon(position) || position}
           </div>
           {position <= 3 && (
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center animate-pulse">
+            <div className="absolute -top-2 -right-2 w-6 h-6 rounded-none flex items-center justify-center animate-pulse" style={{background: 'var(--gradient-accent)'}}>
               <span className="text-white text-xs font-bold">#{position}</span>
             </div>
           )}
@@ -67,46 +73,64 @@ export default function DraggableListItem({ item, position, onRemove }: Draggabl
         <div
           {...attributes}
           {...listeners}
-          className="flex-shrink-0 cursor-grab hover:cursor-grabbing text-purple-400 hover:text-purple-600 p-2 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-110"
+          className="flex-shrink-0 cursor-grab hover:cursor-grabbing p-2 rounded-none transition-all duration-200 hover:scale-110"
+          style={{color: 'var(--border)'}}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--primary)';
+            e.currentTarget.style.backgroundColor = 'var(--background)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--border)';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
         >
           <GripVertical size={20} />
         </div>
 
         {/* Item Content */}
         <div className="flex-1 min-w-0">
-          <h4 className="font-bold text-xl text-gray-800 group-hover:text-purple-700 transition-colors duration-300 mb-2">
+          <h4 className="font-bold text-xl mb-2 transition-colors duration-300" style={{color: 'var(--primary-dark)'}}>
             {item.title}
           </h4>
           {item.description && (
-            <p className="text-gray-600 leading-relaxed line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
+            <p className="leading-relaxed line-clamp-2 transition-colors duration-300" style={{color: 'var(--foreground)'}}>
               {item.description}
             </p>
           )}
-          {item.image_url && (
-            <div className="mt-3">
-              <Image
-                src={item.image_url}
-                alt={item.title}
-                width={80}
-                height={80}
-                className="w-20 h-20 object-cover rounded-xl border-2 border-purple-200 group-hover:border-purple-300 transition-colors duration-300 shadow-md"
-              />
-            </div>
-          )}
         </div>
+
+        {/* Item Image */}
+        {item.image_url && (
+          <div className="flex-shrink-0 w-20 h-20">
+            <img
+              src={item.image_url}
+              alt={item.title}
+              className="w-full h-full object-cover rounded-none shadow-md group-hover:shadow-lg transition-shadow duration-300"
+            />
+          </div>
+        )}
 
         {/* Remove Button */}
         <button
-          onClick={onRemove}
-          className="flex-shrink-0 p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 hover:scale-110 border-2 border-transparent hover:border-red-200"
+          onClick={() => onRemove(item.id)}
+          className="flex-shrink-0 p-2 rounded-none transition-all duration-200 hover:scale-110"
+          style={{
+            color: 'var(--accent)',
+            backgroundColor: 'transparent'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#ff0000';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--accent)';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
           title="Remove item"
         >
-          <Trash2 size={18} />
+          <X size={20} />
         </button>
       </div>
-
-      {/* Hover effect overlay */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/0 via-pink-500/0 to-indigo-500/0 group-hover:from-purple-500/5 group-hover:via-pink-500/5 group-hover:to-indigo-500/5 transition-all duration-500 opacity-0 group-hover:opacity-100 pointer-events-none"></div>
     </div>
   );
 }

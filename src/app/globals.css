@@ -1,26 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #6366f1;
-  --primary-light: #a5b4fc;
-  --secondary: #ec4899;
-  --secondary-light: #f9a8d4;
-  --accent: #f59e0b;
-  --accent-light: #fcd34d;
-  --success: #10b981;
-  --success-light: #6ee7b7;
-  --warning: #f97316;
-  --warning-light: #fdba74;
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  --gradient-cool: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
-  --shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.3);
-  --shadow-glow-yellow: 0 0 20px rgba(245, 158, 11, 0.3);
+  /* New Color Palette from the provided image */
+  --color-1: #c4b5a0;  /* Light beige - for backgrounds */
+  --color-2: #3d3327;  /* Dark brown - for text/accents */
+  --color-3: #8b7355;  /* Medium brown - for borders/secondary */
+  --color-4: #000000;  /* Pure black - for strong contrast */
+  --color-5: #5a2c2c;  /* Dark maroon - for accents */
+  --color-6: #1f4e79;  /* Dark blue - for accents */
+  --color-7: #4a2c2a;  /* Dark brown - for accents */
+  --color-8: #2c3e50;  /* Dark blue-gray - for accents */
+  --color-9: #6a5f4f;  /* Medium gray-brown - for secondary elements */
+  
+  /* Semantic color assignments */
+  --background: #c4b5a0;  /* Light beige background */
+  --background-secondary: #e8dcc6;  /* Even lighter beige */
+  --foreground: #3d3327;  /* Dark brown text */
+  --primary: #8b7355;     /* Medium brown primary */
+  --primary-dark: #3d3327; /* Dark brown for emphasis */
+  --accent: #5a2c2c;      /* Dark maroon accent */
+  --accent-blue: #1f4e79; /* Dark blue accent */
+  --border: #8b7355;      /* Medium brown borders */
+  --border-light: rgba(139, 115, 85, 0.3); /* Light brown borders */
+  
+  /* Gradients using the new palette */
+  --gradient-primary: linear-gradient(135deg, #c4b5a0 0%, #8b7355 100%);
+  --gradient-secondary: linear-gradient(135deg, #e8dcc6 0%, #c4b5a0 100%);
+  --gradient-accent: linear-gradient(135deg, #8b7355 0%, #3d3327 100%);
+  --gradient-dark: linear-gradient(135deg, #3d3327 0%, #000000 100%);
+  
+  /* Shadows using the new palette */
+  --shadow-glow: 0 0 20px rgba(139, 115, 85, 0.3);
+  --shadow-glow-dark: 0 0 20px rgba(61, 51, 39, 0.3);
+  --shadow-glow-accent: 0 0 20px rgba(90, 44, 44, 0.3);
 }
 
 @theme inline {
@@ -32,8 +44,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f0f23;
-    --foreground: #ffffff;
+    --background: #3d3327;  /* Dark brown background for dark mode */
+    --background-secondary: #2c251a;  /* Even darker brown */
+    --foreground: #c4b5a0;  /* Light beige text */
   }
 }
 

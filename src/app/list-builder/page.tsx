@@ -301,48 +301,101 @@ function ListBuilderContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen" style={{background: 'var(--gradient-secondary)'}}>
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md shadow-lg border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="backdrop-blur-sm shadow-2xl border-b-2 relative overflow-hidden" style={{backgroundColor: 'rgba(61, 51, 39, 0.95)', borderBottomColor: 'rgba(139, 115, 85, 0.6)'}}>
+        <div className="absolute inset-0" style={{background: 'var(--gradient-accent)', opacity: 0.1}}></div>
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `linear-gradient(var(--border-light) 1px, transparent 1px), linear-gradient(90deg, var(--border-light) 1px, transparent 1px)`,
+          backgroundSize: '20px 20px'
+        }}></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex flex-row justify-between items-center py-4 sm:h-20 gap-4">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               {selectedCategory && (
                 <button
                   onClick={selectedSubGenre ? handleBackToSubGenres : handleBackToCategories}
-                  className="p-2 sm:p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 flex-shrink-0"
+                  className="p-2 sm:p-3 rounded-none transition-all duration-200 flex-shrink-0 border hover:shadow-lg"
+                  style={{
+                    color: 'var(--border)',
+                    borderColor: 'var(--border-light)',
+                    backgroundColor: 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--primary)';
+                    e.currentTarget.style.backgroundColor = 'rgba(139, 115, 85, 0.2)';
+                    e.currentTarget.style.borderColor = 'var(--primary)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--border)';
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.borderColor = 'var(--border-light)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
                   <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                 </button>
               )}
               <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                 <div className="relative flex-shrink-0">
-                  <Star className="h-6 w-6 sm:h-8 sm:w-8 text-transparent bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text" />
-                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 absolute -top-1 -right-1 animate-pulse" />
+                  {/* Circular radar-like element */}
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 border-2 rounded-full relative" style={{borderColor: 'var(--border)'}}>
+                    <div className="absolute inset-1 border rounded-full" style={{borderColor: 'var(--border-light)'}}></div>
+                    <div className="absolute inset-2 rounded-full" style={{backgroundColor: 'var(--border-light)'}}></div>
+                    <Star className="absolute inset-0 m-auto h-4 w-4 sm:h-5 sm:w-5" style={{color: 'var(--border)'}} />
+                  </div>
                 </div>
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">
-                  {selectedSubGenre 
-                    ? `${selectedSubGenre.display_name} ${selectedCategory?.display_name} List Builder`
-                    : selectedCategory 
-                    ? `${selectedCategory.display_name} List Builder` 
-                    : 'List Builder'
-                  }
-                </h1>
+                <div className="flex flex-col">
+                  <h1 className="text-lg sm:text-xl font-bold truncate font-mono tracking-widest" style={{color: 'var(--background)'}}>
+                    {selectedSubGenre 
+                      ? `${selectedSubGenre.display_name.toUpperCase()}.${selectedCategory?.display_name.toUpperCase()}.BUILDER`
+                      : selectedCategory 
+                      ? `${selectedCategory.display_name.toUpperCase()}.BUILDER` 
+                      : 'COLLECTION.BUILDER'
+                    }
+                  </h1>
+                  <div className="text-xs font-mono" style={{color: 'rgba(196, 181, 160, 0.7)'}}>SYSTEM.ONLINE</div>
+                </div>
               </div>
             </div>
             
-            <button
-              onClick={() => router.push('/my-lists')}
-              className="p-2 sm:p-3 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl transition-all duration-200 hover:scale-105 border border-purple-200 flex-shrink-0"
-              title="My Lists"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-4">
+              {/* Status indicators */}
+              <div className="flex items-center gap-2">
+                <div className="text-xs font-mono" style={{color: 'var(--border)'}}>STATUS: ACTIVE</div>
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: 'var(--border)'}}></div>
+              </div>
+              
+              <button
+                onClick={() => router.push('/my-lists')}
+                className="p-2 sm:p-3 rounded-none transition-all duration-200 border flex-shrink-0 hover:shadow-lg"
+                style={{
+                  color: 'var(--border)',
+                  borderColor: 'var(--border-light)',
+                  backgroundColor: 'transparent'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--primary)';
+                  e.currentTarget.style.backgroundColor = 'rgba(139, 115, 85, 0.2)';
+                  e.currentTarget.style.borderColor = 'var(--primary)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--border)';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.borderColor = 'var(--border-light)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+                title="Archive Lists"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </button>
+            </div>
           </div>
-          
-          {/* Remove the separate My Lists Button section below */}
         </div>
       </header>
 
@@ -351,14 +404,14 @@ function ListBuilderContent() {
         {!selectedCategory ? (
           <div className="animate-slide-in-up">
             <div className="text-center mb-8 sm:mb-12">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-pink-200">
-                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-pink-600" />
-                <span className="text-pink-700 font-medium text-sm sm:text-base">✨ Choose Your Adventure ✨</span>
+              <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-none mb-4 sm:mb-6 border" style={{background: 'var(--gradient-primary)', borderColor: 'var(--border)'}}>
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" style={{color: 'var(--primary-dark)'}} />
+                <span className="font-medium text-sm sm:text-base" style={{color: 'var(--primary-dark)'}}>✨ Choose Your Adventure ✨</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4" style={{color: 'var(--primary-dark)'}}>
                 What&apos;s Your Passion?
               </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
+              <p className="text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4 sm:px-0" style={{color: 'var(--foreground)'}}>
                 Pick a category and start building your amazing top 10 list! 🚀
               </p>
             </div>
@@ -370,14 +423,14 @@ function ListBuilderContent() {
         ) : !selectedSubGenre ? (
           <div className="animate-slide-in-up">
             <div className="text-center mb-8 sm:mb-12">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-blue-200">
-                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                <span className="text-blue-700 font-medium text-sm sm:text-base">🎯 Pick Your Sub-Genre 🎯</span>
+              <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-none mb-4 sm:mb-6 border" style={{background: 'var(--gradient-accent)', borderColor: 'var(--border)'}}>
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" style={{color: 'var(--background-secondary)'}} />
+                <span className="font-medium text-sm sm:text-base" style={{color: 'var(--background-secondary)'}}>🎯 Pick Your Sub-Genre 🎯</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4" style={{color: 'var(--primary-dark)'}}>
                 {selectedCategory.display_name} Sub-Genres
               </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-4 sm:px-0">
+              <p className="text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4 sm:px-0" style={{color: 'var(--foreground)'}}>
                 Choose a specific sub-genre or go with the general category! 🚀
               </p>
             </div>
@@ -392,17 +445,41 @@ function ListBuilderContent() {
                   display_name: `All ${selectedCategory.display_name}s`,
                   icon: selectedCategory.icon || '🎯'
                 })}
-                className="group p-4 sm:p-6 rounded-2xl border-2 border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                className="group relative p-4 sm:p-6 rounded-none border-2 backdrop-blur-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+                style={{
+                  borderColor: 'rgba(139, 115, 85, 0.6)',
+                  backgroundColor: 'rgba(61, 51, 39, 0.9)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(139, 115, 85, 0.6)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
               >
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">
-                    {selectedCategory.icon || '🎯'}
+                {/* Corner brackets */}
+                <div className="absolute top-1 left-1 w-3 h-3 border-l border-t" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                <div className="absolute top-1 right-1 w-3 h-3 border-r border-t" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                <div className="absolute bottom-1 left-1 w-3 h-3 border-l border-b" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                <div className="absolute bottom-1 right-1 w-3 h-3 border-r border-b" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                
+                {/* Scanning line effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12" style={{backgroundImage: 'linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent)'}}></div>
+                
+                <div className="text-center relative">
+                  <div className="relative mb-2 sm:mb-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-none flex items-center justify-center text-lg sm:text-xl font-bold border group-hover:transition-shadow duration-300" style={{background: 'var(--gradient-primary)', color: 'var(--primary-dark)', borderColor: 'var(--border)'}} onMouseEnter={(e) => e.currentTarget.style.boxShadow = 'var(--shadow-glow)'} onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}>
+                      {selectedCategory.icon || '🎯'}
+                    </div>
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-black"></div>
                   </div>
-                  <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2 text-purple-700">
-                    All {selectedCategory.display_name}s
+                  <h3 className="font-semibold text-xs sm:text-sm mb-1 transition-colors duration-300 font-mono tracking-wide" style={{color: 'var(--background)'}} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--background-secondary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--background)'}>
+                    ALL.{selectedCategory.display_name.toUpperCase()}S
                   </h3>
-                  <p className="text-xs sm:text-sm text-purple-600">
-                    General category
+                  <p className="text-xs font-mono" style={{color: 'rgba(196, 181, 160, 0.6)'}}>
+                    GENERAL.CAT
                   </p>
                 </div>
               </button>
@@ -412,16 +489,43 @@ function ListBuilderContent() {
                 <button
                   key={subGenre.id}
                   onClick={() => handleSubGenreSelect(subGenre)}
-                  className="group p-4 sm:p-6 rounded-2xl border-2 border-gray-200 bg-white hover:border-purple-300 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                  className="group relative p-4 sm:p-6 rounded-none border-2 backdrop-blur-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+                  style={{
+                    borderColor: 'rgba(139, 115, 85, 0.4)',
+                    backgroundColor: 'rgba(61, 51, 39, 0.9)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-glow-dark)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(139, 115, 85, 0.4)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
-                  <div className="text-center">
-                    <div className="text-2xl sm:text-3xl mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-300">
-                      {subGenre.icon}
+                  {/* Corner brackets */}
+                  <div className="absolute top-1 left-1 w-3 h-3 border-l border-t" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                  <div className="absolute top-1 right-1 w-3 h-3 border-r border-t" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                  <div className="absolute bottom-1 left-1 w-3 h-3 border-l border-b" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                  <div className="absolute bottom-1 right-1 w-3 h-3 border-r border-b" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+                  
+                  {/* Scanning line effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -skew-x-12" style={{backgroundImage: 'linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent)'}}></div>
+                  
+                  <div className="text-center relative">
+                    <div className="relative mb-2 sm:mb-3">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto rounded-none flex items-center justify-center text-lg sm:text-xl font-bold border group-hover:transition-shadow duration-300" style={{background: 'var(--gradient-accent)', color: 'var(--background-secondary)', borderColor: 'var(--border)'}} onMouseEnter={(e) => e.currentTarget.style.boxShadow = 'var(--shadow-glow)'} onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}>
+                        {subGenre.icon}
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full border" style={{backgroundColor: 'var(--accent-blue)', borderColor: 'var(--primary-dark)'}}></div>
                     </div>
-                    <h3 className="font-semibold text-sm sm:text-lg mb-1 sm:mb-2 text-gray-800">
-                      {subGenre.display_name}
+                    <h3 className="font-semibold text-xs sm:text-sm transition-colors duration-300 font-mono tracking-wide" style={{color: 'var(--background)'}} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--background-secondary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--background)'}>
+                      {subGenre.display_name.toUpperCase()}
                     </h3>
                   </div>
+                  
+                  {/* Status line at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent to-transparent" style={{backgroundImage: 'linear-gradient(to right, transparent, rgba(139, 115, 85, 0.3), transparent)'}}></div>
                 </button>
               ))}
             </div>
@@ -430,20 +534,20 @@ function ListBuilderContent() {
           <div className="space-y-8 sm:space-y-12 animate-slide-in-up">
             {/* List Header */}
             <div className="text-center">
-              <div className="bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-white/50 shadow-xl">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-orange-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 border border-yellow-200">
-                  <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600" />
-                  <span className="text-yellow-700 font-medium text-sm sm:text-base">🏆 Your Top 10 List 🏆</span>
+              <div className="backdrop-blur-sm rounded-none p-6 sm:p-8 border shadow-xl" style={{background: 'var(--gradient-secondary)', borderColor: 'var(--border-light)'}}>
+                <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-none mb-4 sm:mb-6 border" style={{background: 'var(--gradient-primary)', borderColor: 'var(--border)'}}>
+                  <Trophy className="h-4 w-4 sm:h-5 sm:w-5" style={{color: 'var(--primary-dark)'}} />
+                  <span className="font-medium text-sm sm:text-base" style={{color: 'var(--primary-dark)'}}>🏆 Your Top 10 List 🏆</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4" style={{color: 'var(--primary-dark)'}}>
                   {list?.title || `My Top ${selectedSubGenre.display_name} ${selectedCategory.display_name}s of ${year}`}
                 </h2>
-                <p className="text-base sm:text-lg text-gray-600">
+                <p className="text-base sm:text-lg" style={{color: 'var(--foreground)'}}>
                   Drag and drop to reorder your items. Maximum of 10 items allowed.
                 </p>
                 {list && list.items.length > 0 && (
-                  <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-teal-100 px-3 sm:px-4 py-2 rounded-full">
-                    <span className="text-green-700 font-medium text-sm sm:text-base">
+                  <div className="mt-4 sm:mt-6 inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-none border" style={{backgroundColor: 'rgba(139, 115, 85, 0.2)', borderColor: 'var(--border-light)'}}>
+                    <span className="font-medium text-sm sm:text-base" style={{color: 'var(--primary-dark)'}}>
                       {list.items.length}/10 items added
                     </span>
                   </div>
@@ -452,7 +556,7 @@ function ListBuilderContent() {
             </div>
 
             {/* Add Item Form */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-xl border border-white/50">
+            <div className="backdrop-blur-sm rounded-none p-6 sm:p-8 shadow-xl border" style={{backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-light)'}}>
               <AddItemForm
                 onAddItem={handleAddItem}
                 disabled={list?.items.length === 10}
@@ -461,25 +565,51 @@ function ListBuilderContent() {
 
             {/* Draggable List */}
             {list && (
-              <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-xl border border-white/50">
-                <DraggableList
-                  items={list.items}
-                  onReorder={handleReorder}
-                  onRemoveItem={handleRemoveItem}
-                  maxItems={10}
-                />
+              <div className="bg-black/90 backdrop-blur-sm rounded-none p-6 sm:p-8 shadow-xl border-2 var(--border)/40 relative overflow-hidden">
+                {/* Corner brackets */}
+                <div className="absolute top-2 left-2 w-6 h-6 border-l-2 border-t-2 var(--border)"></div>
+                <div className="absolute top-2 right-2 w-6 h-6 border-r-2 border-t-2 var(--border)"></div>
+                <div className="absolute bottom-2 left-2 w-6 h-6 border-l-2 border-b-2 var(--border)"></div>
+                <div className="absolute bottom-2 right-2 w-6 h-6 border-r-2 border-b-2 var(--border)"></div>
+                
+                {/* Grid pattern overlay */}
+                <div className="absolute inset-0 opacity-10" style={{
+                  backgroundImage: `linear-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.1) 1px, transparent 1px)`,
+                  backgroundSize: '20px 20px'
+                }}></div>
+                
+                <div className="relative">
+                  <DraggableList
+                    items={list.items}
+                    onReorder={handleReorder}
+                    onRemoveItem={handleRemoveItem}
+                    maxItems={10}
+                  />
+                </div>
               </div>
             )}
 
             {/* Share Buttons */}
             {list && list.items.length > 0 && (
-              <div className="text-center bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-white/50 shadow-xl">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Share Your Amazing List! 🎉</h3>
-                <ShareButtons
-                  list={list}
-                  category={selectedCategory}
-                  year={year}
-                />
+              <div className="text-center bg-black/90 backdrop-blur-sm rounded-none p-6 sm:p-8 border-2 var(--border)/40 shadow-xl relative overflow-hidden">
+                {/* Corner brackets */}
+                <div className="absolute top-2 left-2 w-6 h-6 border-l-2 border-t-2 var(--border)"></div>
+                <div className="absolute top-2 right-2 w-6 h-6 border-r-2 border-t-2 var(--border)"></div>
+                <div className="absolute bottom-2 left-2 w-6 h-6 border-l-2 border-b-2 var(--border)"></div>
+                <div className="absolute bottom-2 right-2 w-6 h-6 border-r-2 border-b-2 var(--border)"></div>
+                
+                <div className="relative">
+                  <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
+                    <div className="w-4 h-4 border-2 rotate-45" style={{borderColor: 'var(--border)'}}></div>
+                    <h3 className="text-xl sm:text-2xl font-bold font-mono tracking-wider" style={{color: 'var(--background)'}}>SHARE.PROTOCOL.ACTIVATED</h3>
+                    <div className="w-4 h-4 border-2 rotate-45" style={{borderColor: 'var(--border)'}}></div>
+                  </div>
+                  <ShareButtons
+                    list={list}
+                    category={selectedCategory}
+                    year={year}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -491,10 +621,10 @@ function ListBuilderContent() {
 
 export default function ListBuilderPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center" style={{background: 'var(--gradient-secondary)'}}>
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading...</p>
+        <div className="animate-spin rounded-none h-12 w-12 border-b-2 mx-auto mb-4" style={{borderBottomColor: 'var(--border)'}}></div>
+        <p style={{color: 'var(--foreground)'}}>Loading...</p>
       </div>
     </div>}>
       <ListBuilderContent />

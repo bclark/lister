@@ -20,68 +20,100 @@ export default function CategorySelector({
           <button
             key={category.id}
             onClick={() => onSelectCategory(category)}
-            className={`group relative p-8 rounded-3xl border-2 transition-all duration-300 hover:scale-105 transform ${
-              selectedCategory?.id === category.id
-                ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-glow-pink'
-                : 'border-gray-200 bg-white hover:border-purple-300 hover:shadow-lg hover:shadow-purple-100'
-            } animate-slide-in-up`}
-            style={{animationDelay: `${index * 0.1}s`}}
+            className={`group relative p-6 sm:p-8 rounded-none border-2 transition-all duration-300 transform backdrop-blur-sm hover:shadow-xl animate-slide-in-up overflow-hidden`}
+            style={{
+              backgroundColor: 'rgba(61, 51, 39, 0.9)',
+              borderColor: selectedCategory?.id === category.id ? 'var(--border)' : 'rgba(139, 115, 85, 0.4)',
+              boxShadow: selectedCategory?.id === category.id ? 'var(--shadow-glow)' : 'none',
+              animationDelay: `${index * 0.1}s`
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = selectedCategory?.id === category.id ? 'var(--border)' : 'rgba(139, 115, 85, 0.4)';
+              e.currentTarget.style.boxShadow = selectedCategory?.id === category.id ? 'var(--shadow-glow)' : 'none';
+            }}
           >
-            {/* Background decoration */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            {/* Corner brackets */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+            <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2" style={{borderColor: 'rgba(139, 115, 85, 0.6)'}}></div>
+            
+            {/* Scanning line effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform -skew-x-12 group-hover:animate-pulse" style={{backgroundImage: 'linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent)'}}></div>
             
             <div className="relative text-center">
+              {/* Icon with HUD styling */}
               {category.icon && (
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {category.icon}
+                <div className="relative mb-4">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-none flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-lg border group-hover:transition-shadow duration-300" style={{background: 'var(--gradient-primary)', color: 'var(--primary-dark)', borderColor: 'var(--border)'}} onMouseEnter={(e) => e.currentTarget.style.boxShadow = 'var(--shadow-glow)'} onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}>
+                    {category.icon}
+                  </div>
+                  {/* Status indicator */}
+                  <div className="absolute -top-1 -right-1 w-3 h-3 rounded-none border" style={{backgroundColor: 'var(--accent)', borderColor: 'var(--primary-dark)'}}></div>
                 </div>
               )}
-              <h3 className="font-bold text-xl mb-3 text-gray-800 group-hover:text-purple-700 transition-colors duration-300">
-                {category.display_name}
+              
+              <h3 className="font-bold text-lg sm:text-xl mb-3 transition-colors duration-300 font-mono tracking-wider" style={{color: 'var(--background)'}} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--background-secondary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--background)'}>
+                {category.display_name.toUpperCase()}
               </h3>
+              
               {category.description && (
-                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300 mb-4">
+                <p className="leading-relaxed group-hover:transition-colors duration-300 mb-4 text-sm font-mono" style={{color: 'rgba(196, 181, 160, 0.7)'}} onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(196, 181, 160, 0.8)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(196, 181, 160, 0.7)'}>
                   {category.description}
                 </p>
               )}
               
-              {/* Sub-genres preview */}
+              {/* Technical readout section */}
               {category.sub_genres && category.sub_genres.length > 0 && (
-                <div className="mt-4">
-                  <p className="text-sm text-purple-600 font-medium mb-2">
-                    Popular sub-genres:
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-2">
+                <div className="mt-4 border p-3" style={{borderColor: 'rgba(139, 115, 85, 0.2)', backgroundColor: 'rgba(139, 115, 85, 0.1)'}}>
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <div className="w-1 h-1 rounded-none" style={{backgroundColor: 'var(--border)'}}></div>
+                    <p className="text-xs font-mono tracking-wide" style={{color: 'var(--border)'}}>
+                      SUB.CATEGORIES.AVAILABLE
+                    </p>
+                    <div className="w-1 h-1 rounded-none" style={{backgroundColor: 'var(--border)'}}></div>
+                  </div>
+                  
+                  <div className="flex flex-wrap justify-center gap-1 sm:gap-2">
                     {category.sub_genres.slice(0, 4).map((subGenre) => (
                       <span
                         key={subGenre.id}
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full border border-purple-200"
+                        className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-none border font-mono"
+                        style={{backgroundColor: 'rgba(139, 115, 85, 0.2)', color: 'var(--background)', borderColor: 'rgba(139, 115, 85, 0.4)'}}
                       >
-                        <span className="text-sm">{subGenre.icon}</span>
+                        <span className="text-xs">{subGenre.icon}</span>
                         <span>{subGenre.display_name}</span>
                       </span>
                     ))}
                     {category.sub_genres.length > 4 && (
-                      <span className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full border border-gray-200">
-                        +{category.sub_genres.length - 4} more
+                      <span className="inline-flex items-center px-2 py-1 text-xs rounded-none border font-mono" style={{backgroundColor: 'rgba(139, 115, 85, 0.3)', color: 'var(--background-secondary)', borderColor: 'rgba(139, 115, 85, 0.5)'}}>
+                        +{category.sub_genres.length - 4}.MORE
                       </span>
                     )}
                   </div>
                 </div>
               )}
-              
-              {/* Fun hover effect */}
-              <div className="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-r from-purple-500/0 via-pink-500/0 to-indigo-500/0 group-hover:from-purple-500/20 group-hover:via-pink-500/20 group-hover:to-indigo-500/20 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
             </div>
             
             {/* Selection indicator */}
             {selectedCategory?.id === category.id && (
-              <div className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-glow-pink">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+              <div className="absolute top-4 right-4">
+                <div className="w-6 h-6 rounded-none flex items-center justify-center border shadow-lg" style={{background: 'var(--gradient-primary)', borderColor: 'var(--border)', boxShadow: 'var(--shadow-glow)'}}>
+                  <svg className="w-4 h-4 text-black font-bold" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                {/* Pulsing indicator */}
+                <div className="absolute -top-1 -right-1 w-2 h-2 rounded-none animate-pulse" style={{backgroundColor: 'var(--accent)'}}></div>
               </div>
             )}
+            
+            {/* Status line at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent to-transparent" style={{backgroundImage: 'linear-gradient(to right, transparent, rgba(139, 115, 85, 0.5), transparent)'}}></div>
           </button>
         ))}
       </div>
