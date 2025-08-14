@@ -112,7 +112,7 @@ export async function POST(
     }
 
     // Real Supabase insert with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
 
     // First, check if the list exists and belongs to the user
@@ -266,7 +266,7 @@ export async function PUT(
     }
 
     // Real Supabase update with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
 
     // First, check if the list exists and belongs to the user

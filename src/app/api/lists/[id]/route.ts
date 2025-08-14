@@ -32,7 +32,8 @@ async function getUserFromAuth(authHeader: string | null): Promise<{ userId: str
 }
 
 // Mock storage for development (shared with main lists route)
-let mockLists: any[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockLists: any[] = [];
 
 export async function GET(
   request: NextRequest,
@@ -66,7 +67,7 @@ export async function GET(
     }
 
     // Real Supabase query with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
     const { data, error } = await supabase
       .from('lists')
@@ -109,7 +110,8 @@ export async function GET(
     // Transform the data to match our List interface
     const list = {
       ...data,
-      items: (data.list_items || []).sort((a, b) => a.position - b.position),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      items: (data.list_items || []).sort((a: any, b: any) => a.position - b.position),
     };
 
     return NextResponse.json({ list });
@@ -163,7 +165,7 @@ export async function PUT(
     }
 
     // Real Supabase update with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
     const { data, error } = await supabase
       .from('lists')
@@ -210,7 +212,8 @@ export async function PUT(
     // Transform the data to match our List interface
     const list = {
       ...data,
-      items: (data.list_items || []).sort((a, b) => a.position - b.position),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      items: (data.list_items || []).sort((a: any, b: any) => a.position - b.position),
     };
 
     return NextResponse.json({ list });
@@ -257,7 +260,7 @@ export async function DELETE(
     }
 
     // Real Supabase delete with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
     const { error } = await supabase
       .from('lists')

@@ -32,8 +32,7 @@ async function getUserFromAuth(authHeader: string | null): Promise<{ userId: str
 }
 
 // Mock storage for development (shared with main lists route)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockLists: any[] = [];
+// Note: This is intentionally unused in this file, but kept for consistency
 
 export async function GET(
   request: NextRequest,
@@ -128,7 +127,7 @@ export async function GET(
     }
 
     // Real Supabase query with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
     
     // For production, you might want to add user validation
@@ -187,6 +186,7 @@ export async function GET(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const lists = data.map((list: any) => ({
       ...list,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       items: (list.list_items || []).sort((a: any, b: any) => a.position - b.position),
     }));
 

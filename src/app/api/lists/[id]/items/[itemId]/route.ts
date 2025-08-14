@@ -32,7 +32,8 @@ async function getUserFromAuth(authHeader: string | null): Promise<{ userId: str
 }
 
 // Mock storage for development (shared with main lists route)
-let mockLists: any[] = [];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockLists: any[] = [];
 
 export async function PUT(
   request: NextRequest,
@@ -63,7 +64,8 @@ export async function PUT(
     // Check if Supabase is configured
     if (!isSupabaseConfigured()) {
       // Update mock list item for development
-      const listIndex = mockLists.findIndex(l => l.id === listId && l.user_id === userId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const listIndex = mockLists.findIndex((l: any) => l.id === listId && l.user_id === userId);
       
       if (listIndex === -1) {
         return NextResponse.json(
@@ -73,7 +75,8 @@ export async function PUT(
       }
 
       const list = mockLists[listIndex];
-      const itemIndex = list.items.findIndex(item => item.id === itemId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const itemIndex = list.items.findIndex((item: any) => item.id === itemId);
       
       if (itemIndex === -1) {
         return NextResponse.json(
@@ -96,7 +99,7 @@ export async function PUT(
     }
 
     // Real Supabase update with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
 
     // First, check if the list exists and belongs to the user
@@ -177,7 +180,8 @@ export async function DELETE(
     // Check if Supabase is configured
     if (!isSupabaseConfigured()) {
       // Delete mock list item for development
-      const listIndex = mockLists.findIndex(l => l.id === listId && l.user_id === userId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const listIndex = mockLists.findIndex((l: any) => l.id === listId && l.user_id === userId);
       
       if (listIndex === -1) {
         return NextResponse.json(
@@ -187,7 +191,8 @@ export async function DELETE(
       }
 
       const list = mockLists[listIndex];
-      const itemIndex = list.items.findIndex(item => item.id === itemId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const itemIndex = list.items.findIndex((item: any) => item.id === itemId);
       
       if (itemIndex === -1) {
         return NextResponse.json(
@@ -196,11 +201,11 @@ export async function DELETE(
         );
       }
 
-      const deletedItem = list.items[itemIndex];
       list.items.splice(itemIndex, 1);
       
       // Re-adjust positions
-      list.items = list.items.map((item, index) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      list.items = list.items.map((item: any, index: number) => ({
         ...item,
         position: index + 1,
         updated_at: new Date().toISOString(),
@@ -212,7 +217,7 @@ export async function DELETE(
     }
 
     // Real Supabase delete with authenticated user
-    const token = authHeader.substring(7);
+    const token = authHeader!.substring(7);
     const supabase = createServerClientWithAuth(token);
 
     // First, check if the list exists and belongs to the user

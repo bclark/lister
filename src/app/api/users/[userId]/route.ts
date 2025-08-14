@@ -70,7 +70,7 @@ export async function GET(
     
     if (isOwnProfile) {
       // Return current user's own profile
-      const token = authHeader.substring(7);
+      const token = authHeader!.substring(7);
       const supabase = createServerClientWithAuth(token);
       const { data: userData, error: userError } = await supabase.auth.getUser();
       
