@@ -20,8 +20,31 @@ export const createServerClient = () => {
   return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
     },
   });
+};
+
+// Server-side Supabase client with user session
+export const createServerClientWithAuth = (accessToken: string) => {
+  if (!hasValidCredentials) {
+    throw new Error('Supabase credentials not configured');
+  }
+  const client = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  });
+  
+  return client;
 };
 
 // Helper to check if Supabase is configured
