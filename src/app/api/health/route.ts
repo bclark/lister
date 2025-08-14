@@ -18,6 +18,10 @@ export async function GET() {
           signout: '/api/auth/signout',
           me: '/api/auth/me',
         },
+        users: {
+          info: '/api/users/{userId}',
+          lists: '/api/users/{userId}/lists',
+        },
         categories: '/api/categories',
         lists: '/api/lists',
         health: '/api/health',

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase';
+import { createServerClient, createServerClientWithAuth } from '@/lib/supabase';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 // Helper function to get user ID from authorization header
@@ -66,8 +66,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ lists: filteredLists });
     }
 
-    // Real Supabase query
-    const supabase = createServerClient();
+    // Real Supabase query with authenticated user
+    const token = authHeader.substring(7);
+    const supabase = createServerClientWithAuth(token);
     let query = supabase
       .from('lists')
       .select(`
@@ -180,8 +181,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ list: newList }, { status: 201 });
     }
 
-    // Real Supabase insert
-    const supabase = createServerClient();
+    // Real Supabase insert with authenticated user
+    const token = authHeader.substring(7);
+    const supabase = createServerClientWithAuth(token);
     const { data, error } = await supabase
       .from('lists')
       .insert({

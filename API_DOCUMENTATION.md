@@ -161,6 +161,71 @@ Retrieve all available categories.
 
 ---
 
+## User Endpoints
+
+### Get User Information
+Retrieve public information about a user.
+
+**GET** `/users/{user_id}`
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+```json
+{
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "created_at": "2023-12-01T00:00:00Z",
+    "updated_at": "2023-12-01T00:00:00Z",
+    "username": "johndoe",
+    "is_own_profile": true
+  }
+}
+```
+
+### Get User's Lists
+Retrieve all lists for a specific user by their ID.
+
+**GET** `/users/{user_id}/lists`
+
+**Query Parameters:**
+- `category_id` (optional) - Filter by category ID
+- `year` (optional) - Filter by year
+- `include_private` (optional) - Include private lists (only works for own profile)
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Response:**
+```json
+{
+  "lists": [
+    {
+      "id": "uuid",
+      "user_id": "uuid",
+      "category_id": "uuid",
+      "year": 2023,
+      "title": "My Top Movies",
+      "created_at": "2023-12-01T00:00:00Z",
+      "updated_at": "2023-12-01T00:00:00Z",
+      "items": [...],
+      "categories": {...}
+    }
+  ],
+  "user_id": "uuid",
+  "is_own_lists": true,
+  "user_email": "user@example.com"
+}
+```
+
+---
+
 ## Lists Endpoints
 
 ### Get User Lists

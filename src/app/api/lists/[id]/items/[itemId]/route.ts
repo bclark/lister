@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase';
+import { createServerClient, createServerClientWithAuth } from '@/lib/supabase';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 // Helper function to get user ID from authorization header
@@ -95,8 +95,9 @@ export async function PUT(
       return NextResponse.json({ item: list.items[itemIndex] });
     }
 
-    // Real Supabase update
-    const supabase = createServerClient();
+    // Real Supabase update with authenticated user
+    const token = authHeader.substring(7);
+    const supabase = createServerClientWithAuth(token);
 
     // First, check if the list exists and belongs to the user
     const { data: listData, error: listError } = await supabase
@@ -210,8 +211,9 @@ export async function DELETE(
       return NextResponse.json({ message: 'Item deleted successfully' });
     }
 
-    // Real Supabase delete
-    const supabase = createServerClient();
+    // Real Supabase delete with authenticated user
+    const token = authHeader.substring(7);
+    const supabase = createServerClientWithAuth(token);
 
     // First, check if the list exists and belongs to the user
     const { data: listData, error: listError } = await supabase

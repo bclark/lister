@@ -1,0 +1,842 @@
+{
+  "info": {
+    "name": "Lister API",
+    "description": "Complete API collection for the Lister app - managing user lists for mobile applications",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "list_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "item_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "target_user_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "API Health Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check API health status and available endpoints"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Sign Up",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.session && response.session.access_token) {",
+                  "        pm.collectionVariables.set('access_token', response.session.access_token);",
+                  "        pm.collectionVariables.set('user_id', response.user.id);",
+                  "        console.log('Access token saved:', response.session.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signup",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "signup"]
+            },
+            "description": "Create a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "Sign In",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.session && response.session.access_token) {",
+                  "        pm.collectionVariables.set('access_token', response.session.access_token);",
+                  "        pm.collectionVariables.set('user_id', response.user.id);",
+                  "        console.log('Access token saved:', response.session.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signin",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "signin"]
+            },
+            "description": "Authenticate an existing user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get current authenticated user information"
+          },
+          "response": []
+        },
+        {
+          "name": "Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/signout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "signout"]
+            },
+            "description": "Sign out the current user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            },
+            "description": "Retrieve all available categories"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            },
+            "description": "Get user information (own profile)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Other User Info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{target_user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{target_user_id}}"]
+            },
+            "description": "Get another user's public information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Lists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}", "lists"]
+            },
+            "description": "Get lists for current user (alternative to /lists)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Other User's Lists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{target_user_id}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{target_user_id}}", "lists"]
+            },
+            "description": "Get lists for another user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Lists (Filtered by Category)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{target_user_id}}/lists?category_id=cat-1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{target_user_id}}", "lists"],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "cat-1",
+                  "description": "Filter by category ID"
+                }
+              ]
+            },
+            "description": "Get user's lists filtered by category"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Lists (Filtered by Year)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{target_user_id}}/lists?year=2023",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{target_user_id}}", "lists"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2023",
+                  "description": "Filter by year"
+                }
+              ]
+            },
+            "description": "Get user's lists filtered by year"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User's Lists (Include Private)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/lists?include_private=true",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}", "lists"],
+              "query": [
+                {
+                  "key": "include_private",
+                  "value": "true",
+                  "description": "Include private lists (only works for own profile)"
+                }
+              ]
+            },
+            "description": "Get user's lists including private ones"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lists",
+      "item": [
+        {
+          "name": "Get All Lists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["lists"]
+            },
+            "description": "Get all lists for the authenticated user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lists by Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists?category_id=cat-1",
+              "host": ["{{base_url}}"],
+              "path": ["lists"],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "cat-1",
+                  "description": "Filter by category ID"
+                }
+              ]
+            },
+            "description": "Get lists filtered by category"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lists by Year",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists?year=2023",
+              "host": ["{{base_url}}"],
+              "path": ["lists"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2023",
+                  "description": "Filter by year"
+                }
+              ]
+            },
+            "description": "Get lists filtered by year"
+          },
+          "response": []
+        },
+        {
+          "name": "Create List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.list && response.list.id) {",
+                  "        pm.collectionVariables.set('list_id', response.list.id);",
+                  "        console.log('List ID saved:', response.list.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": \"cat-1\",\n  \"year\": 2023,\n  \"title\": \"My Top Movies of 2023\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["lists"]
+            },
+            "description": "Create a new list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}"]
+            },
+            "description": "Get a specific list by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update List",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated List Title\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}"]
+            },
+            "description": "Update a list's metadata"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete List",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}"]
+            },
+            "description": "Delete a list and all its items"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "List Items",
+      "item": [
+        {
+          "name": "Add Item to List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.item && response.item.id) {",
+                  "        pm.collectionVariables.set('item_id', response.item.id);",
+                  "        console.log('Item ID saved:', response.item.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Matrix\",\n  \"description\": \"A computer hacker learns about the true nature of reality\",\n  \"image_url\": \"https://example.com/matrix.jpg\",\n  \"position\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}/items",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}", "items"]
+            },
+            "description": "Add a new item to a list"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Multiple Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Inception\",\n  \"description\": \"A thief who steals corporate secrets through dream-sharing technology\",\n  \"image_url\": \"https://example.com/inception.jpg\",\n  \"position\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}/items",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}", "items"]
+            },
+            "description": "Add another item to test multiple items"
+          },
+          "response": []
+        },
+        {
+          "name": "Update List Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Matrix (Updated)\",\n  \"description\": \"Updated description: A computer hacker learns about the true nature of reality and fights against the machines\",\n  \"image_url\": \"https://example.com/matrix-updated.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}/items/{{item_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}", "items", "{{item_id}}"]
+            },
+            "description": "Update a specific list item"
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder List Items",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"id\": \"{{item_id}}\",\n      \"title\": \"The Matrix (Updated)\",\n      \"description\": \"Updated description: A computer hacker learns about the true nature of reality and fights against the machines\",\n      \"image_url\": \"https://example.com/matrix-updated.jpg\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}/items",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}", "items"]
+            },
+            "description": "Reorder all items in a list (updates positions)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete List Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists/{{list_id}}/items/{{item_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "{{list_id}}", "items", "{{item_id}}"]
+            },
+            "description": "Delete a specific item from a list"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Testing",
+      "item": [
+        {
+          "name": "Unauthorized Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["lists"]
+            },
+            "description": "Test unauthorized access (should return 401)"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer invalid-token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["lists"]
+            },
+            "description": "Test with invalid token (should return 401)"
+          },
+          "response": []
+        },
+        {
+          "name": "Non-existent List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lists/non-existent-id",
+              "host": ["{{base_url}}"],
+              "path": ["lists", "non-existent-id"]
+            },
+            "description": "Test accessing non-existent list (should return 404)"
+          },
+          "response": []
+        },
+        {
+          "name": "Duplicate List Creation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": \"cat-1\",\n  \"year\": 2023,\n  \"title\": \"Duplicate List\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["lists"]
+            },
+            "description": "Test creating duplicate list (same category/year, should return 409)"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Request Body",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invalid_field\": \"value\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lists",
+              "host": ["{{base_url}}"],
+              "path": ["lists"]
+            },
+            "description": "Test with invalid request body (should return 400)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// This script runs before each request",
+          "console.log('Making request to:', pm.request.url.toString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// This script runs after each request",
+          "console.log('Response status:', pm.response.code);",
+          "console.log('Response time:', pm.response.responseTime + 'ms');"
+        ]
+      }
+    }
+  ]
+}
